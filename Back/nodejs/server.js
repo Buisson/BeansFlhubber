@@ -34,6 +34,7 @@ app.get('/json', function (req, res){
 });
 
 app.get('/sendMail', function (req, res){
+	 console.log('sendMail : ', req.query);
 	 var content = fs.readFileSync("config.json");
 	 var jsonContent = JSON.parse(content);
 	 var id = req.query.id;
@@ -65,6 +66,7 @@ app.get('/sendMail', function (req, res){
 					});
 	}
 	console.log("ID DONT EXIST");
+	res.send(req.query);
 	res.end();
 });
 
@@ -126,10 +128,17 @@ app.post('/form', function (req, res) {
 
 app.get('/create', function (req, res) {
 
-	console.log('create', req.body);
+	console.log('create : ', req.query);
     var content = fs.readFileSync("config.json");
 	var jsonContent = JSON.parse(content);
-	var usersReceive = req.query.id.split(",");
+	
+	var usersReceive = [];
+	if(req.query.id === undefined){
+
+	}
+	else{
+		usersReceive = req.query.ids.split(",");
+	}
 
     var users = Object.keys(jsonContent);
 
@@ -142,9 +151,13 @@ app.get('/create', function (req, res) {
 	}
 
     fs.writeFile('config.json', JSON.stringify(jsonContent), function (err) {
-	if (err) return console.log(err);
-	console.log('Json updated');
+		if (err){
+			return console.log(err);
+		}
+		console.log('Json updated');
 	});
+
+    res.send(req.query);
 });
 
 

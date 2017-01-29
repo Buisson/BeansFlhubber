@@ -36,9 +36,9 @@ function caca(){
 }
 
 function getUsers(){
-	$.get( "http://localhost:8081/getUsers", function( data ) {
+	$.get( "http://localhost:8081/getDevices", function( data ) {
 		for (var i = 0; i < data.length; i++){
-			$("select").append( '<option value="'+data[i]+'">'+data[i]+'</option>')
+			$("select").append( '<option value="'+data[i].id+'">'+data[i].name+'</option>')
 		}
 	});
 }
