@@ -69,14 +69,25 @@ app.get('/sendMail', function (req, res){
 });
 
 
-app.get('/getUsers', function (req,res)
+app.get('/getDevices', function (req,res)
 {
 	var content = fs.readFileSync("config.json");
 	var jsonContent = JSON.parse(content);
-	var users = Object.keys(jsonContent);
-	console.log(users);
+	var devices_id = Object.keys(jsonContent);
+	var reponse = [];
+	for (var i = 0, len = devices_id.length; i < len; i++) {
+		var device = {
+			id : devices_id[i],
+			name: jsonContent[devices_id[i]].deviceName
+		}
+		reponse.push(device);
+		//users[i] = jsonContent[users[i]]["deviceName"] +"-" + users[i];
+    }
 
-	res.send(users);
+
+	console.log(reponse);
+
+	res.send(reponse);
 	res.end();
 });
 
@@ -85,7 +96,7 @@ app.get('/user', function (req, res){
 	 var jsonContent = JSON.parse(content);
 	 var id = req.query.id;
 	 var user = jsonContent[id];
-	 console.log("user", user);
+     console.log("user", user);
 	 res.send(user);
 	 res.end();
 });
@@ -101,7 +112,9 @@ app.post('/form', function (req, res) {
     var content = fs.readFileSync("config.json");
 	var jsonContent = JSON.parse(content);
 
-	jsonContent[req.body.id].email = req.body.email
+	jsonContent[req.body.id].email = req.body.email;
+	jsonContent[req.body.id].deviceName = req.body.surname;
+	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
 	
 	fs.writeFile('config.json', JSON.stringify(jsonContent), function (err) {
 	  if (err) return console.log(err);
@@ -123,7 +136,7 @@ app.get('/create', function (req, res) {
     for (var i = 0, len = users.length; i < len; i++) {
     	for (var j = 0, len = usersReceive.length; j < len; j++) {
 	    	if(users[i] != usersReceive[j]) {
-    		    jsonContent[usersReceive[j]] = {"timeBeforeAlert":0,"email":"None"};
+    		    jsonContent[usersReceive[j]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[j]};
 	    	}
 		}
 	}
