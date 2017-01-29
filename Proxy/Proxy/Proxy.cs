@@ -17,7 +17,7 @@ namespace WComp.Beans
 	public class Proxy
 	{
 
-		private string port = "8181"; 
+		private string port = "8081"; 
 		private string ip = "10.0.0.3";
 		//private string getVal = "";
 		
@@ -37,6 +37,24 @@ namespace WComp.Beans
 		
 		public string get(string url){
 			string tmp = Url.GET(url);
+			getVal(tmp);
+			return tmp;
+		}
+		
+		public string getConfig(string id) {
+			string tmp = Url.GET(ip + ":" + port + "/user?id=" + id);
+			getVal(tmp);
+			return tmp;
+		}
+		
+		public string sendMail(string id){
+			string tmp = Url.GET(ip + ":" + port + "/sendMail?id=" + id);
+			getVal(tmp);
+			return tmp;
+		}
+		
+		public string newDevice(string ids){
+			string tmp = Url.GET(ip + ":" + port + "/create?ids=" + ids);
 			getVal(tmp);
 			return tmp;
 		}
