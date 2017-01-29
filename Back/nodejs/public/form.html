@@ -1,0 +1,76 @@
+
+<H1> Users modifications</H1>
+
+<h2> Select User in list: </h2>
+<select name="user">
+	<option value="NOTHING">Nothing</option>
+	<option value="new_user">New User</option>
+
+</select>
+
+<div class ="form" style = "display:none">
+<h2> Now you can modifie the User </h2>
+
+	<label for = "email"> Email: </label>1
+	<input name = "email" id= "email"  type = "text">
+
+	<button onclick = "caca();">Edit</button>
+</div>
+
+<script
+	src="https://code.jquery.com/jquery-3.1.1.js"
+			  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+			  crossorigin="anonymous"></script>
+<script>
+
+function caca(){
+	console.log( $("select option.selected"));
+
+	$.post( "http://localhost:8081/form", 
+		{ 
+			id : $(" select").val(),
+			email: $(".form [name=email]").val()
+		} 
+	);
+
+}
+
+function getUsers(){
+	$.get( "http://localhost:8081/getUsers", function( data ) {
+		for (var i = 0; i < data.length; i++){
+			$("select").append( '<option value="'+data[i]+'">'+data[i]+'</option>')
+		}
+	});
+}
+
+function updateForm(value){
+	console.log("user selected:", value);
+	if (value != "NOTHING" && value != "new_user"){
+		$.get( "http://localhost:8081/user?id="+value, function( data ) {
+			console.log("data",data);
+			$(".form input[name=email]").val(data.email);
+			$(".form").css({display: "block"});
+		});
+		$(".new_user").css({display: "none"});
+
+	}else{
+		$(".form").css({display: "none"});
+		$(".new_user").css({display: "none"});
+	}
+	if(value == "new_user"){
+		$(".new_user").css({display: "block"});
+		$(".form").css({display: "none"});
+
+	}
+}
+
+$(document).ready(function(){
+	console.log("getting infos...");
+	getUsers();
+
+	$("select").change(function(){
+		updateForm($(this).val())
+	})
+});
+
+</script>
