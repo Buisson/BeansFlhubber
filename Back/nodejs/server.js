@@ -119,10 +119,13 @@ app.post('/form', function (req, res) {
 	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
 	
 	fs.writeFile('config.json', JSON.stringify(jsonContent), function (err) {
-	  if (err) return console.log(err);
+	  if (err){
+	  	res.send("KO");
+	  	return console.log(err);
+	  }
 	  console.log('Json updated');
-	});	//todo save the json
-
+	});
+	res.send("OK");
 });
 
 

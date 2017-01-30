@@ -1,76 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Interface Utilisateur FlHubber</title>
+		<script
+			src="https://code.jquery.com/jquery-3.1.1.js"
+					  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+					  crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<H1 style='text-align:center;'> Device modifications</H1>
 
-<H1> Users modifications</H1>
+		<h2>Liste des devices branchés : </h2>
 
-<h2> Select User in list: </h2>
-<select name="user">
-	<option value="NOTHING">Nothing</option>
-	<option value="new_user">New User</option>
+		<div>
+			//TODO ici afficher les devices en ce moment qui sont connecté
+			<br>
+			Genre :<br>
+			Port 1 : (idDevice) OR (name if set)<br>
+			Port 2 : (idDevice) OR (name if set)<br>
+			Port 3 : (idDevice) OR (name if set)<br>
+			Port 4 : (idDevice) OR (name if set)<br>
+		</div>
 
-</select>
+		<h2> Select Device in list: </h2>
+		<select id='device' name="user">
+			<option value="NOTHING">Nothing</option>
+			<!--<option value="new_user">New User</option>-->
 
-<div class ="form" style = "display:none">
-<h2> Now you can modifie the User </h2>
+		</select>
 
-	<label for = "email"> Email: </label>1
-	<input name = "email" id= "email"  type = "text">
+		<div class ="form" style = "display:none">
+		<h2> Now you can modifie the Device </h2>
 
-	<button onclick = "caca();">Edit</button>
-</div>
+			<label for = "nickname"> Surnom: </label>
+			<input name = "nickname" id= "nickname"  type = "text"><br>
 
-<script
-	src="https://code.jquery.com/jquery-3.1.1.js"
-			  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-			  crossorigin="anonymous"></script>
-<script>
+			<label for = "email"> Email: </label>
+			<input name = "email" id= "email"  type = "text"><br>
 
-function caca(){
-	console.log( $("select option.selected"));
+			<label for = "timeBeforeAlert"> Temps avant alerte Mail: </label>
+			<input name = "timeBeforeAlert" id= "timeBeforeAlert"  type = "text"><br>
 
-	$.post( "http://localhost:8081/form", 
-		{ 
-			id : $(" select").val(),
-			email: $(".form [name=email]").val()
-		} 
-	);
+			
 
-}
+			<button onclick = "updateInfo();">Edit</button>
+		</div>
 
-function getUsers(){
-	$.get( "http://localhost:8081/getDevices", function( data ) {
-		for (var i = 0; i < data.length; i++){
-			$("select").append( '<option value="'+data[i].id+'">'+data[i].name+'</option>')
+		<script>
+
+		function updateInfo(){
+			console.log( $("select option.selected"));
+
+			$.post( "http://localhost:8081/form", 
+				{ 
+					id : $("#device").val(),
+					surname : $("#nickname").val(),
+					email: $(".form [name=email]").val(),
+					timeBeforeAlert: $("#timeBeforeAlert").val()
+				}).done(function(data){
+					if(data == "OK"){
+						$("#device option[value="+$("#device").val()+"]").html($("#nickname").val()); //update de la valeur dans le select...
+						alert("Modifications effectuées avec succès");
+					}
+					else{
+						alert("Une erreur est survenue, veuillez essayer ulterieurement");
+					}
+				});
+
 		}
-	});
-}
 
-function updateForm(value){
-	console.log("user selected:", value);
-	if (value != "NOTHING" && value != "new_user"){
-		$.get( "http://localhost:8081/user?id="+value, function( data ) {
-			console.log("data",data);
-			$(".form input[name=email]").val(data.email);
-			$(".form").css({display: "block"});
+		function getUsers(){
+			$.get( "http://localhost:8081/getDevices", function( data ) {
+				for (var i = 0; i < data.length; i++){
+					$("#device").append( '<option value="'+data[i].id+'">'+data[i].name+'</option>')
+				}
+			});
+		}
+
+		function updateForm(value){
+			console.log("user selected:", value);
+			if (value != "NOTHING" && value != "new_user"){
+				$.get( "http://localhost:8081/user?id="+value, function( data ) {
+					console.log("data",data);
+					$(".form input[name=email]").val(data.email);
+					$("#nickname").val(data.deviceName);
+					$("#timeBeforeAlert").val((data.timeBeforeAlert/3600));
+					$(".form").css({display: "block"});
+				});
+				$(".new_user").css({display: "none"});
+
+			}else{
+				$(".form").css({display: "none"});
+				$(".new_user").css({display: "none"});
+			}
+			if(value == "new_user"){
+				$(".new_user").css({display: "block"});
+				$(".form").css({display: "none"});
+
+			}
+		}
+
+		$(document).ready(function(){
+			console.log("getting infos...");
+			getUsers();
+
+			$("select").change(function(){
+				updateForm($(this).val())
+			})
 		});
-		$(".new_user").css({display: "none"});
 
-	}else{
-		$(".form").css({display: "none"});
-		$(".new_user").css({display: "none"});
-	}
-	if(value == "new_user"){
-		$(".new_user").css({display: "block"});
-		$(".form").css({display: "none"});
-
-	}
-}
-
-$(document).ready(function(){
-	console.log("getting infos...");
-	getUsers();
-
-	$("select").change(function(){
-		updateForm($(this).val())
-	})
-});
-
-</script>
+		</script>
+	</body>
+</html>
