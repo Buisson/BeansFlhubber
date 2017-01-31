@@ -135,23 +135,39 @@ app.get('/create', function (req, res) {
     var content = fs.readFileSync("config.json");
 	var jsonContent = JSON.parse(content);
 	
-	var usersReceive = [];
-	if(req.query.id === undefined){
+	usersReceive = JSON.parse(req.query.ids);
 
-	}
-	else{
-		usersReceive = req.query.ids.split(",");
-	}
+	console.log('user receive  ', usersReceive[0]);
 
     var users = Object.keys(jsonContent);
 
-    for (var i = 0, len = users.length; i < len; i++) {
-    	for (var j = 0, len = usersReceive.length; j < len; j++) {
-	    	if(users[i] != usersReceive[j]) {
-    		    jsonContent[usersReceive[j]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[j]};
+    for(var i = 0, len = users.length; i<len; i++) {
+    	jsonContent[users[i]]["portNumber"] = -1;
+    }
+
+    for (var i = 0; i < usersReceive.length; i++) {
+    	var isequal = false;
+    	var atWhatisEqual;
+    	for (var j = 0; j < users.length; j++) {
+
+    			console.log('i    ', i);
+    			console.log('user receive  ', usersReceive[i]);
+	    	if(users[j] == usersReceive[i].idVendor + usersReceive[i].idProduct) {
+	    		isequal = true;
+	    		atWhatisEqual = users[j];
 	    	}
 		}
+		if(isequal) {
+			jsonContent[atWhatisEqual]["infos"] = usersReceive[i];
+			jsonContent[atWhatisEqual]["portNumber"] = usersReceive[i]["portNumber"];
+			isequal = false;
+		}	
+		else {
+			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
+		}
 	}
+
+
 
     fs.writeFile('config.json', JSON.stringify(jsonContent), function (err) {
 		if (err){
