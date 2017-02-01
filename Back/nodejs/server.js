@@ -4,7 +4,17 @@ var fs = require("fs");
 var bodyParser = require("body-parser");
 var mailer = require("nodemailer");
 
+
+
 app.use(express.static('public'));
+app.use(function(request, response, next) {
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 
 var smtpTransport = mailer.createTransport("SMTP",{
@@ -135,11 +145,11 @@ app.get('/create', function (req, res) {
     var content = fs.readFileSync("config.json");
 	var jsonContent = JSON.parse(content);
 	
+	console.log("ICIIIIIIII : "+req.query.ids);
 	usersReceive = JSON.parse(req.query.ids);
 
-	console.log('user receive  ', usersReceive[0]);
-
     var users = Object.keys(jsonContent);
+    var ports = [];
 
     for(var i = 0, len = users.length; i<len; i++) {
     	jsonContent[users[i]]["portNumber"] = -1;
@@ -149,9 +159,6 @@ app.get('/create', function (req, res) {
     	var isequal = false;
     	var atWhatisEqual;
     	for (var j = 0; j < users.length; j++) {
-
-    			console.log('i    ', i);
-    			console.log('user receive  ', usersReceive[i]);
 	    	if(users[j] == usersReceive[i].idVendor + usersReceive[i].idProduct) {
 	    		isequal = true;
 	    		atWhatisEqual = users[j];
@@ -165,7 +172,10 @@ app.get('/create', function (req, res) {
 		else {
 			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
 		}
+		ports[i] = {'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
 	}
+
+	io.emit("updatePorts",ports);
 
 
 
@@ -179,8 +189,7 @@ app.get('/create', function (req, res) {
     res.send(req.query);
 });
 
-
-
+/*
 var server = app.listen(8081, function () {
 
   var host = server.address().address;
@@ -189,3 +198,5 @@ var server = app.listen(8081, function () {
   console.log("Example app listening on port : %s", port);
 
 });
+*/
+http.listen(8081,"0.0.0.0");

@@ -2,24 +2,86 @@
 <html>
 	<head>
 		<title>Interface Utilisateur FlHubber</title>
-		<script
-			src="https://code.jquery.com/jquery-3.1.1.js"
-					  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-					  crossorigin="anonymous"></script>
+		<script src="_js/jquery-3.1.1.js"></script>
+		<script src="_js/socket.io.min.js"></script>
+		<style>
+			/*Sale à mettre dans une feuille css ;)*/
+			#boitier{
+				width:200px;
+				height:250px;
+				background-color: brown;
+				margin:0 auto;
+				position: relative;
+				margin-top:50px;
+				margin-bottom:50px;
+			}
+			.port{
+				background-color:red;
+				font-size:30px;
+				position: absolute;
+			}
+
+			#port1{
+				left:150px;
+				top:10px;
+			}
+			#port2{
+				left:50px;
+				top:10px;
+			}
+			#port3{
+				left:150px;
+				bottom:10px;
+			}
+			#port4{
+				left:50px;
+				bottom:10px;
+			}
+
+
+
+			.namePort{
+				display: none;
+				/*background-color:blue;*/
+				position: absolute;
+				font-weight: bold;
+			}
+
+			#namePort1{
+				left:150px;
+				top:-30px;
+			}
+
+			#namePort2{
+				top:-30px;
+			}
+			#namePort3{
+				left:150px;
+				bottom:-30px;
+			}
+			#namePort4{
+				bottom:-30px;
+			}
+		</style>
 	</head>
 	<body>
 		<H1 style='text-align:center;'> Device modifications</H1>
 
 		<h2>Liste des devices branchés : </h2>
 
+		<div id='boitier'>
+			<span id='port1' class='port'>1</span>
+			<span id='port2' class='port'>2</span>
+			<span id='port3' class='port'>3</span>
+			<span id='port4' class='port'>4</span>
+
+			<div id='namePort1' class='namePort'>1</div>
+			<div id='namePort2' class='namePort'>2</div>
+			<div id='namePort3' class='namePort'>3</div>
+			<div id='namePort4' class='namePort'>4</div>
+		</div>
 		<div>
-			//TODO ici afficher les devices en ce moment qui sont connecté
-			<br>
-			Genre :<br>
-			Port 1 : (idDevice) OR (name if set)<br>
-			Port 2 : (idDevice) OR (name if set)<br>
-			Port 3 : (idDevice) OR (name if set)<br>
-			Port 4 : (idDevice) OR (name if set)<br>
+
 		</div>
 
 		<h2> Select Device in list: </h2>
@@ -101,12 +163,30 @@
 		}
 
 		$(document).ready(function(){
+			var socket = io.connect("http://localhost:8081/");
 			console.log("getting infos...");
 			getUsers();
 
 			$("select").change(function(){
 				updateForm($(this).val())
 			})
+
+
+			//Lorsqu'on recois un update ...
+			socket.on('updatePorts', function(data){
+			  	//alert(JSON.stringify(data));
+			  	$(".namePort").css({"display":"none"}); //on cache tous les affichages des noms au cas ou
+			  	$(".port").css({"background-color":"red"}); //on set tout les port a rouge au cas ou
+			  	for(var i=0;i<data.length;i++){
+			  		var numPort = data[i].portNum;
+			  		var name = data[i].name;
+			  		
+			  		$("#port"+numPort).css({"background-color":"green"});// on set le port en vert
+			  		
+					$("#namePort"+numPort).html(name);
+			  		$("#namePort"+numPort).css({"display":"block"});
+			  	}
+			});
 		});
 
 		</script>
