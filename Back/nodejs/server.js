@@ -30,6 +30,8 @@ var test = {
 	data: "test ok"
 };
 
+var listDevicePlug = []; //TODO envoyer la liste des devices connectés lors de la connexion d'un client...
+
 app.get('/test', function (req, res) {
     console.log( "test" );
     res.json( test );
@@ -172,7 +174,7 @@ app.get('/create', function (req, res) {
 		else {
 			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
 		}
-		ports[i] = {'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
+		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
 	}
 
 	io.emit("updatePorts",ports);
