@@ -4,65 +4,7 @@
 		<title>Interface Utilisateur FlHubber</title>
 		<script src="_js/jquery-3.1.1.js"></script>
 		<script src="_js/socket.io.min.js"></script>
-		<style>
-			/*Sale à mettre dans une feuille css ;)*/
-			#boitier{
-				width:200px;
-				height:250px;
-				background-color: brown;
-				margin:0 auto;
-				position: relative;
-				margin-top:50px;
-				margin-bottom:50px;
-			}
-			.port{
-				background-color:red;
-				font-size:30px;
-				position: absolute;
-			}
-
-			#port1{
-				left:150px;
-				top:10px;
-			}
-			#port2{
-				left:50px;
-				top:10px;
-			}
-			#port3{
-				left:150px;
-				bottom:10px;
-			}
-			#port4{
-				left:50px;
-				bottom:10px;
-			}
-
-
-
-			.namePort{
-				display: none;
-				/*background-color:blue;*/
-				position: absolute;
-				font-weight: bold;
-			}
-
-			#namePort1{
-				left:150px;
-				top:-30px;
-			}
-
-			#namePort2{
-				top:-30px;
-			}
-			#namePort3{
-				left:150px;
-				bottom:-30px;
-			}
-			#namePort4{
-				bottom:-30px;
-			}
-		</style>
+		<link rel='stylesheet' href='_css/fstyles.css' type='text/css'>
 	</head>
 	<body>
 		<H1 style='text-align:center;'> Device modifications</H1>
@@ -108,14 +50,26 @@
 			
 
 			<button onclick = "updateInfo();">Edit</button>
+
 		</div>
 
+		<h2>Configuration des leds</h2>
+		<select id='ledConfig'>
+			<option value='METEO'>Météo</option>
+			<option value='BLUE'>Bleu</option>
+			<option value='ORANGE'>Orange</option>
+			<option value='NONE'>Aucun</option>
+			<option value='ALL'>Toutes</option>
+		</select>
+
+
 		<script>
+		var connectionURL = "http://"+location.hostname+":8081/";
 
 		function updateInfo(){
 			console.log( $("select option.selected"));
 
-			$.post( "http://localhost:8081/form", 
+			$.post( connectionURL+"form", 
 				{ 
 					id : $("#device").val(),
 					surname : $("#nickname").val(),
@@ -140,7 +94,7 @@
 		}
 
 		function getUsers(){
-			$.get( "http://localhost:8081/getDevices", function( data ) {
+			$.get( connectionURL+"getDevices", function( data ) {
 				for (var i = 0; i < data.length; i++){
 					if(!isDeviceAlreadyInList(data[i].id)) {
 						console.log("AJOUT de ..."+data[i].id);
@@ -153,7 +107,7 @@
 		function updateForm(value){
 			console.log("user selected:", value);
 			if (value != "NOTHING" && value != "new_user"){
-				$.get( "http://localhost:8081/user?id="+value, function( data ) {
+				$.get( connectionURL+"userInfoFront?id="+value, function( data ) {
 					console.log("data",data);
 					$("#idDevice").html(value);
 					$(".form input[name=email]").val(data.email);
@@ -185,14 +139,45 @@
 			return find;
 		}
 
+		function getPluggedDevices(){
+			$.get( connectionURL+"getDevicesPlugged", function( data ) {
+				//alert(JSON.stringify(data));
+				$.each(data,function(){
+					var elem = $(this)[0];
+					var id=elem.id;
+					var portNum = elem.portNum;
+					var name = elem.name;
+
+					$("#port"+portNum).css({"background-color":"green"});// on set le port en vert
+			  		
+					$("#namePort"+portNum).html(name);
+					$("#namePort"+portNum).attr("idd",id);
+			  		$("#namePort"+portNum).css({"display":"block"});
+				});
+			});
+		}
+
 		$(document).ready(function(){
-			var socket = io.connect("http://localhost:8081/");
+			var connectionURL = "http://"+location.hostname+":8081/";
+			var socket = io.connect(connectionURL);
 			console.log("getting infos...");
 			getUsers();
+			getPluggedDevices();
 
-			$("select").change(function(){
+			$("#device").change(function(){
 				updateForm($(this).val())
-			})
+			});
+
+			$("#ledConfig").change(function(){
+				//alert($(this).val());
+				$.get(connectionURL+"updateConfigMeteo?newConf="+$(this).val(),function(data){
+					if(data == "OK"){
+						alert("Update OK");
+					}else{
+						alert("Une erreur est survenu ...")
+					}
+				});
+			});
 
 
 			//Lorsqu'on recois un update ...

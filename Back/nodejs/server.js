@@ -106,13 +106,25 @@ app.get('/getDevices', function (req,res)
 });
 
 app.get('/user', function (req, res){
-	 var content = fs.readFileSync("config.json");
-	 var jsonContent = JSON.parse(content);
-	 var id = req.query.id;
-	 var user = jsonContent[id];
-     console.log("user", user);
-	 res.send(user);
-	 res.end();
+	console.log("DANS /USERRRRRRRRRRRRRRRRRRRRRRR")
+	var content = fs.readFileSync("config.json");
+	var jsonContent = JSON.parse(content);
+	var id = req.query.id;
+	var user = jsonContent[id];
+	console.log("user", user);
+	var ret = {"id":id , "timeBeforeAlert":user.timeBeforeAlert};
+	res.send(ret);
+ 	res.end();
+});
+
+app.get('/userInfoFront', function(req, res){
+	var content = fs.readFileSync("config.json",{encoding: 'utf-8'});
+	var jsonContent = JSON.parse(content);
+
+	var id = req.query.id;
+	var user = jsonContent[id];
+	//console.log(content);
+	res.send(user);
 });
 
 app.use(bodyParser.urlencoded({
@@ -176,7 +188,7 @@ app.get('/create', function (req, res) {
 		}
 		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
 	}
-
+	listDevicePlug = ports;
 	io.emit("updatePorts",ports);
 
 
@@ -189,6 +201,30 @@ app.get('/create', function (req, res) {
 	});
 
     res.send(req.query);
+});
+
+
+app.get('/getDevicesPlugged', function (req, res) {
+	res.send(listDevicePlug);
+});
+
+
+app.get('/getConfigMeteo', function(req, res){
+	console.log("Dans getConfigMeteo");
+	var contentMeteo = fs.readFileSync("meteo.json",{encoding: 'utf-8'});
+	console.log(contentMeteo);
+	res.send(contentMeteo);
+});
+
+app.get("/updateConfigMeteo", function(req, res){
+	fs.writeFile('meteo.json', req.query.newConf, function (err) {
+	  if (err){
+	  	res.send("KO");
+	  	return console.log(err);
+	  }
+	  console.log('Meteo updated');
+	});
+	res.send("OK");
 });
 
 /*

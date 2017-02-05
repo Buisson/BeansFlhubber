@@ -1,0 +1,56 @@
+#boitier{
+	width:200px;
+	height:250px;
+	background-color: brown;
+	margin:0 auto;
+	position: relative;
+	margin-top:50px;
+	margin-bottom:50px;
+}
+.port{
+	background-color:red;
+	font-size:30px;
+	position: absolute;
+}
+
+#port1{
+	left:150px;
+	top:10px;
+}
+#port2{
+	left:50px;
+	top:10px;
+}
+#port3{
+	left:150px;
+	bottom:10px;
+}
+#port4{
+	left:50px;
+	bottom:10px;
+}
+
+
+
+.namePort{
+	display: none;
+	/*background-color:blue;*/
+	position: absolute;
+	font-weight: bold;
+}
+
+#namePort1{
+	left:150px;
+	top:-30px;
+}
+
+#namePort2{
+	top:-30px;
+}
+#namePort3{
+	left:150px;
+	bottom:-30px;
+}
+#namePort4{
+	bottom:-30px;
+}
