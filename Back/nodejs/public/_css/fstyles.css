@@ -54,3 +54,9 @@
 #namePort4{
 	bottom:-30px;
 }
+
+.footer-bottom{
+	background-color: #15224f;
+	min-height: 30px;
+	width:100%;
+}
