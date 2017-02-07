@@ -14,6 +14,9 @@ app.use(function(request, response, next) {
 });
 
 var http = require('http').Server(app);
+
+var httpReq = require('http');
+
 var io = require('socket.io')(http);
 
 
@@ -29,6 +32,8 @@ var smtpTransport = mailer.createTransport("SMTP",{
 var test = {
 	data: "test ok"
 };
+
+var ipWCOMP="";
 
 var listDevicePlug = []; //TODO envoyer la liste des devices connectés lors de la connexion d'un client...
 
@@ -141,6 +146,8 @@ app.post('/form', function (req, res) {
 	jsonContent[req.body.id].email = req.body.email;
 	jsonContent[req.body.id].deviceName = req.body.surname;
 	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
+
+	var ret = {"id":req.body.id , "timeBeforeAlert":jsonContent[req.body.id].timeBeforeAlert};
 	
 	fs.writeFile('config.json', JSON.stringify(jsonContent), function (err) {
 	  if (err){
@@ -149,6 +156,17 @@ app.post('/form', function (req, res) {
 	  }
 	  console.log('Json updated');
 	});
+	if(ipWCOMP!=""){
+		var pathWcomp = '/FlHubber/ConfReturn/'+JSON.stringify(ret);
+		//console.log("ICIIIIII : "+pathWcomp);
+		httpReq.get("http://"+ipWCOMP+":8081"+pathWcomp,function(response){
+
+		});
+	}
+	else{
+		console.log("IPWcomp pas set ...");
+	}
+
 	res.send("OK");
 });
 
@@ -224,7 +242,30 @@ app.get("/updateConfigMeteo", function(req, res){
 	  }
 	  console.log('Meteo updated');
 	});
+
+	if(ipWCOMP!=""){
+		var pathWcomp = '/FlHubber/Meteo/'+req.query.newConf;
+		//console.log("ICIIIIII : "+pathWcomp);
+		httpReq.get("http://"+ipWCOMP+":8081"+pathWcomp,function(response){
+
+		});
+	}
+	else{
+		console.log("IPWcomp pas set ...");
+	}
+
 	res.send("OK");
+});
+
+app.get("/setIpWcomp",function(req, res){
+	console.log("dans setIpWcomp");
+	ipWCOMP = req.query.ip;
+	console.log(req.query.ip);
+	res.send("OK");
+});
+
+app.get("/ipWcomp", function(req, res){
+	res.send(ipWCOMP);
 });
 
 /*
