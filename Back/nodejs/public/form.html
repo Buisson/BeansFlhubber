@@ -54,9 +54,6 @@
 						<label for = "email"> Email: </label>
 						<input class="form-control"  name = "email" id= "email"  type = "text"><br>
 
-						<label for = "phone"> Téléphone: </label>
-						<input class="form-control"  name = "phone" id= "phone"  type = "text"><br>
-
 						<label for = "timeBeforeAlert"> Temps avant alerte Mail: </label>
 						<input class="form-control" name = "timeBeforeAlert" id= "timeBeforeAlert"  type = "text"><br>
 
@@ -98,7 +95,6 @@
 					id : $("#device").val(),
 					surname : $("#nickname").val(),
 					email: $(".form [name=email]").val(),
-					phone: $(".form [name=phone]").val(),
 					timeBeforeAlert: $("#timeBeforeAlert").val()
 				}).done(function(data){
 					if(data == "OK"){
@@ -136,7 +132,6 @@
 					console.log("data",data);
 					$("#idDevice").val(value);
 					$(".form input[name=email]").val(data.email);
-					$(".form input[name=phone]").val(data.phone);
 					$("#nickname").val(data.deviceName);
 					$("#timeBeforeAlert").val((data.timeBeforeAlert/3600));
 					$(".form").css({display: "block"});
