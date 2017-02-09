@@ -3,6 +3,7 @@ var app = express();
 var fs = require("fs");
 var bodyParser = require("body-parser");
 var mailer = require("nodemailer");
+var TMClient = require("textmagic-rest-client");
 
 
 
@@ -48,6 +49,28 @@ app.get('/json', function (req, res){
 	 var jsonContent = JSON.parse(content);
 	 res.send(jsonContent);
 	 res.end();
+});
+
+app.get('/sendSms', function(req,res) {
+
+	console.log('sendSms : ', req.query);
+	var content = fs.readFileSync("config.json");
+	var jsonContent = JSON.parse(content);
+	var id = req.query.id;
+	if(jsonContent[id]) {
+		var number = jsonContent[id]["phone"];
+		if(number == "None") {
+			res.send("Sms not send");
+		 	res.end();
+		 	console.log("Sms not send");
+		 	return;
+		}
+	}
+
+	var c = new TMClient('edgarpersenda', 'wxtSKsbxz4iTkSiXiZCXwggTGoWo2n ');
+	c.Messages.send({text: 'Va brancher ton portable !', phones: number}, function(err, res){
+	    console.log('Messages.send()', err, res);
+	});
 });
 
 app.get('/sendMail', function (req, res){
@@ -144,6 +167,7 @@ app.post('/form', function (req, res) {
 	var jsonContent = JSON.parse(content);
 
 	jsonContent[req.body.id].email = req.body.email;
+	jsonContent[req.body.id].phone = req.body.phone;
 	jsonContent[req.body.id].deviceName = req.body.surname;
 	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
 
@@ -202,7 +226,7 @@ app.get('/create', function (req, res) {
 			isequal = false;
 		}	
 		else {
-			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
+			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","phone":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
 		}
 		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
 	}
