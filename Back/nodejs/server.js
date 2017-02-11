@@ -59,7 +59,8 @@ app.get('/sendSms', function(req,res) {
 	var id = req.query.id;
 	if(jsonContent[id]) {
 		var number = jsonContent[id]["phone"];
-		if(number == "None") {
+		var send = jsonContent[id]["usePhone"];
+		if(number == "None" || send == "No") {
 			res.send("Sms not send");
 		 	res.end();
 		 	console.log("Sms not send");
@@ -80,8 +81,8 @@ app.get('/sendMail', function (req, res){
 	 var id = req.query.id;
 	 if(jsonContent[id]) {
 		 var adress = jsonContent[id]["email"];
-
-		 if(adress == "None") {
+		 var send = jsonContent[id]["useMail"];
+		 if(adress == "None" || send == "No") {
 		 	res.send("Email not set");
 		 	res.end();
 		 	console.log("Email not set");
@@ -168,6 +169,8 @@ app.post('/form', function (req, res) {
 
 	jsonContent[req.body.id].email = req.body.email;
 	jsonContent[req.body.id].phone = req.body.phone;
+	jsonContent[req.body.id].useMail = req.body.useMail;
+	jsonContent[req.body.id].usePhone = req.body.usePhone;
 	jsonContent[req.body.id].deviceName = req.body.surname;
 	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
 
@@ -226,7 +229,7 @@ app.get('/create', function (req, res) {
 			isequal = false;
 		}	
 		else {
-			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","phone":"None","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
+			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","phone":"None","useMail":"No","usePhone":"No","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
 		}
 		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
 	}

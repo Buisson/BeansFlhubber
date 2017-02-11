@@ -57,6 +57,12 @@
 						<label for = "phone"> Téléphone: </label>
 						<input class="form-control"  name = "phone" id= "phone"  type = "text"><br>
 
+						<label for = "useMail"> Use Mail: </label>
+						<input class="form-control"  name = "useMail" id= "useMail"  type = "checkbox"><br>
+
+						<label for = "usePhone"> use Phone: </label>
+						<input class="form-control"  name = "usePhone" id= "usePhone"  type = "checkbox"><br>
+
 						<label for = "timeBeforeAlert"> Temps avant alerte Mail: </label>
 						<input class="form-control" name = "timeBeforeAlert" id= "timeBeforeAlert"  type = "text"><br>
 
@@ -93,12 +99,23 @@
 		function updateInfo(){
 			console.log( $("select option.selected"));
 
+			var phoneIsUse = "No";
+			if(document.getElementById('usePhone').checked) {
+				phoneIsUse = "Yes";
+			}
+			var mailIsUse = "No";
+			if(document.getElementById('useMail').checked) {
+				mailIsUse = "Yes";
+			}
+
 			$.post( connectionURL+"form", 
 				{ 
 					id : $("#device").val(),
 					surname : $("#nickname").val(),
 					email: $(".form [name=email]").val(),
 					phone: $(".form [name=phone]").val(),
+					useMail: mailIsUse,
+					usePhone: phoneIsUse,
 					timeBeforeAlert: $("#timeBeforeAlert").val()
 				}).done(function(data){
 					if(data == "OK"){
@@ -134,9 +151,19 @@
 			if (value != "NOTHING"){
 				$.get( connectionURL+"userInfoFront?id="+value, function( data ) {
 					console.log("data",data);
+					var mailIsUse = false;
+					var phoneIsUse = false;
+					if (data.useMail == "Yes") {
+						mailIsUse = true;
+					}
+					if(data.usePhone == "Yes") {
+						phoneIsUse = true;
+					}
 					$("#idDevice").val(value);
 					$(".form input[name=email]").val(data.email);
 					$(".form input[name=phone]").val(data.phone);
+					document.getElementById('useMail').checked = mailIsUse;
+					document.getElementById('usePhone').checked = phoneIsUse;
 					$("#nickname").val(data.deviceName);
 					$("#timeBeforeAlert").val((data.timeBeforeAlert/3600));
 					$(".form").css({display: "block"});
