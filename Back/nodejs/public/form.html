@@ -203,6 +203,15 @@
 			});
 		}
 
+		function unselectAllMeteo(){
+			$("#ledConfig option").removeAttr("selected");
+		}
+
+		function setMeteoSelect(val){
+			unselectAllMeteo();
+			$("#ledConfig option[value='"+val+"']").attr("selected","selected");
+		}
+
 		$(document).ready(function(){
 			var connectionURL = "http://"+location.hostname+":8081/";
 			var socket = io.connect(connectionURL);
@@ -223,6 +232,10 @@
 						alert("Une erreur est survenu ...")
 					}
 				});
+			});
+
+			$.get(connectionURL+"getConfigMeteo",function(data){
+				setMeteoSelect(data);
 			});
 
 

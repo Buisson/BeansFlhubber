@@ -68,10 +68,16 @@ app.get('/sendSms', function(req,res) {
 		}
 	}
 
+	var retour = "Fin Envois SMS";
 	var c = new TMClient('edgarpersenda', 'wxtSKsbxz4iTkSiXiZCXwggTGoWo2n ');
 	c.Messages.send({text: 'Va brancher ton portable !', phones: number}, function(err, res){
 	    console.log('Messages.send()', err, res);
+	    if(err){
+	    	console.log("ERROR SMS");
+	    	//retour = "Une erreur est survenue lors de l'envois du SMS...";
+	    }
 	});
+	res.send(retour);
 });
 
 app.get('/sendMail', function (req, res){
@@ -92,8 +98,8 @@ app.get('/sendMail', function (req, res){
 		var mail = {
 			from: "flhubberocs@gmail.com",
 			to: adress,
-			subject: "Branche ton portable branleur",
-			html: "Qu'est ce que tu fous encore là, va brancher ton portable"
+			subject: "[ALERTE FLHUBBER] Branchement de votre périphérique",
+			html: "Une alerte a été envoyé depuis votre hub USB FlHubber votre périphérique : "+jsonContent[id]["deviceName"]+" n'a pas été branché depuis "+jsonContent[id]["timeBeforeAlert"]+" secondes. Vous devriez brancher votre périphérique."
 		}
 
 		smtpTransport.sendMail(mail, function(error, response){
@@ -172,7 +178,7 @@ app.post('/form', function (req, res) {
 	jsonContent[req.body.id].useMail = req.body.useMail;
 	jsonContent[req.body.id].usePhone = req.body.usePhone;
 	jsonContent[req.body.id].deviceName = req.body.surname;
-	jsonContent[req.body.id].timeBeforeAlert = req.body.timeBeforeAlert * 3600;
+	jsonContent[req.body.id].timeBeforeAlert = parseInt(req.body.timeBeforeAlert * 3600);
 
 	var ret = {"id":req.body.id , "timeBeforeAlert":jsonContent[req.body.id].timeBeforeAlert};
 	
@@ -185,6 +191,7 @@ app.post('/form', function (req, res) {
 	});
 	if(ipWCOMP!=""){
 		var pathWcomp = '/FlHubber/ConfReturn/'+JSON.stringify(ret);
+		console.log("Appel de l'url WCOMP : "+"http://"+ipWCOMP+":8081"+pathWcomp);
 		//console.log("ICIIIIII : "+pathWcomp);
 		httpReq.get("http://"+ipWCOMP+":8081"+pathWcomp,function(response){
 
@@ -218,7 +225,7 @@ app.get('/create', function (req, res) {
     	var isequal = false;
     	var atWhatisEqual;
     	for (var j = 0; j < users.length; j++) {
-	    	if(users[j] == usersReceive[i].idVendor + usersReceive[i].idProduct) {
+	    	if(users[j] == usersReceive[i].idVendor + usersReceive[i].idProduct + usersReceive[i].iSerialNumber) {
 	    		isequal = true;
 	    		atWhatisEqual = users[j];
 	    	}
@@ -229,9 +236,9 @@ app.get('/create', function (req, res) {
 			isequal = false;
 		}	
 		else {
-			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"]] = {"timeBeforeAlert":0,"email":"None","phone":"None","useMail":"No","usePhone":"No","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"],"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
+			 jsonContent[usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"] + usersReceive[i]["iSerialNumber"]] = {"timeBeforeAlert":0,"email":"None","phone":"None","useMail":"No","usePhone":"No","deviceName":usersReceive[i]["idVendor"] + usersReceive[i]["idProduct"] + usersReceive[i]["iSerialNumber"] ,"port" : usersReceive[i]["portNumber"] ,"info" : usersReceive[i]};
 		}
-		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct]["deviceName"] };
+		ports[i] = {'id':(usersReceive[i].idVendor + usersReceive[i].idProduct + usersReceive[i].iSerialNumber ), 'portNum' : usersReceive[i]["portNumber"] , 'name':jsonContent[usersReceive[i].idVendor + usersReceive[i].idProduct + usersReceive[i].iSerialNumber]["deviceName"] };
 	}
 	listDevicePlug = ports;
 	io.emit("updatePorts",ports);
@@ -262,6 +269,7 @@ app.get('/getConfigMeteo', function(req, res){
 });
 
 app.get("/updateConfigMeteo", function(req, res){
+	console.log("dans /updateConfigMeteo");
 	fs.writeFile('meteo.json', req.query.newConf, function (err) {
 	  if (err){
 	  	res.send("KO");
@@ -273,6 +281,7 @@ app.get("/updateConfigMeteo", function(req, res){
 	if(ipWCOMP!=""){
 		var pathWcomp = '/FlHubber/Meteo/'+req.query.newConf;
 		//console.log("ICIIIIII : "+pathWcomp);
+		console.log("Appel de ..."+"http://"+ipWCOMP+":8081"+pathWcomp);
 		httpReq.get("http://"+ipWCOMP+":8081"+pathWcomp,function(response){
 
 		});
