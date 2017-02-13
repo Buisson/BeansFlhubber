@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 # SharpDevelop 3.2.1.6466
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlHubberService", "CPBRestService\FlHubberService.csproj", "{33797A4E-8234-46AB-84CB-FC17CEACC6EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlHubberService", "FlHubberService\FlHubberService.csproj", "{33797A4E-8234-46AB-84CB-FC17CEACC6EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

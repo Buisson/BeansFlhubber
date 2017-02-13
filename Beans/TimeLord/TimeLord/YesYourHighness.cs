@@ -16,25 +16,27 @@ namespace WComp.Beans
 	
 		public void setConfig(string jsonString) {
 			if (jsonString.Length == 0) {
+				ifYouWantToLaunchTheUselessEvent("FAIL: length == 0");
 				return;
 			}
 			try {
 				Dictionary<string, object> config = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
 				if ((null != config) && (config.ContainsKey("id")) && (config.ContainsKey("timeBeforeAlert"))) {
 					if (null == config["timeBeforeAlert"]) {
-						
+						ifYouWantToLaunchTheUselessEvent("FAIL: null == config[timeBeforeAlert]");
 					} else {
 						int timeBeforeAlert = JsonConvert.DeserializeObject<int>(config["timeBeforeAlert"].ToString());
-						string id = JsonConvert.DeserializeObject<string>(config["id"].ToString());
-							
+						string id = config["id"].ToString();
 						if (usersMaxTicks.ContainsKey(id)) {
 							usersMaxTicks.Remove(id);
 						}
 						usersMaxTicks.Add(id, timeBeforeAlert);
 					}
+				} else {
+					ifYouWantToLaunchTheUselessEvent("FAIL: else");
 				}
 			} catch {
-				ifYouWantToLaunchTheUselessEvent("FAIL");
+				ifYouWantToLaunchTheUselessEvent("FAIL catch");
 			}
 		}
 		
