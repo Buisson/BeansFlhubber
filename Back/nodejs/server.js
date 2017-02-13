@@ -69,8 +69,8 @@ app.get('/sendSms', function(req,res) {
 	}
 
 	var retour = "Fin Envois SMS";
-	var c = new TMClient('edgarpersenda', 'wxtSKsbxz4iTkSiXiZCXwggTGoWo2n ');
-	c.Messages.send({text: 'Va brancher ton portable !', phones: number}, function(err, res){
+	var c = new TMClient('arthurkaamelott', 'AXrSAeGKG1mXYBzOOx6jchGnVDXh8n');
+	c.Messages.send({text: "Une alerte a été envoyé depuis votre hub USB FlHubber votre périphérique : "+jsonContent[id]["deviceName"]+" n'a pas été branché depuis "+jsonContent[id]["timeBeforeAlert"]+" secondes. Vous devriez brancher votre périphérique.", phones: number}, function(err, res){
 	    console.log('Messages.send()', err, res);
 	    if(err){
 	    	console.log("ERROR SMS");
@@ -314,4 +314,4 @@ var server = app.listen(8081, function () {
 
 });
 */
-http.listen(8081,"0.0.0.0");
+http.listen(8082,"0.0.0.0");

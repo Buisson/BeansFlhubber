@@ -94,7 +94,7 @@
 				</div>
 			</div>
 		<script>
-		var connectionURL = "http://"+location.hostname+":8081/";
+		var connectionURL = "http://"+location.hostname+":8082/";
 
 		function updateInfo(){
 			console.log( $("select option.selected"));
@@ -213,7 +213,7 @@
 		}
 
 		$(document).ready(function(){
-			var connectionURL = "http://"+location.hostname+":8081/";
+			var connectionURL = "http://"+location.hostname+":8082/";
 			var socket = io.connect(connectionURL);
 			console.log("getting infos...");
 			getUsers();
