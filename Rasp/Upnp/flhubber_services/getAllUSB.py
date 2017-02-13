@@ -14,7 +14,7 @@ def getJSONUsb():
 		print "PORT : "+str(d.port_number)
 		print "PORTS : "+str(d.port_numbers)
 		'''
-		json += "{\"portNumber\":"+str(d.port_number)+",\"idVendor\":\""+str(d.idVendor)+"\",\"idProduct\":\""+str(d.idProduct)+"\"},"
+		json += "{\"portNumber\":"+str(d.port_number)+",\"idVendor\":\""+str(d.idVendor)+"\",\"idProduct\":\""+str(d.idProduct)+"\",\"iSerialNumber\":\""+str(d.serial_number)+"\"},"
 
 	if json != "[":
 		json = json[:-1]
