@@ -1,0 +1,15 @@
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Meteo.dll
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Meteo.pdb
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Beans.dll
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\Meteo.dll
+C:\Users\Meulon\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\Meteo.pdb
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Meteo.dll
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Meteo.pdb
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Beans.dll
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\Meteo.dll
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\obj\x86\Debug\Meteo.pdb
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\BasicBeans.dll
+C:\Users\XMG-Fire\Documents\SharpDevelop Projects\Meteo\Meteo\bin\Debug\Util.dll
