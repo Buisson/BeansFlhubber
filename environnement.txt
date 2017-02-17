@@ -1,0 +1,4 @@
+Environnement Hard/Soft : 
+
+Pour chacun, rajouter les infos sur l'environnement nécessaire pour la bonne installation :
+- Version Rasp / Raspbian
