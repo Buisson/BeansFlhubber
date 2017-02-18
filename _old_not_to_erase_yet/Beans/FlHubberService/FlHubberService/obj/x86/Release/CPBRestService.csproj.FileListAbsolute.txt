@@ -1,4 +1,0 @@
-C:\Users\Michael\Documents\SharpDevelop Projects\CPBRestService\CPBRestService\bin\Release\CPBRestService.dll
-C:\Users\Michael\Documents\SharpDevelop Projects\CPBRestService\CPBRestService\bin\Release\Beans.dll
-C:\Users\Michael\Documents\SharpDevelop Projects\CPBRestService\CPBRestService\obj\x86\Release\ResolveAssemblyReference.cache
-C:\Users\Michael\Documents\SharpDevelop Projects\CPBRestService\CPBRestService\obj\x86\Release\CPBRestService.dll
