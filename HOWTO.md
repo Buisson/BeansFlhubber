@@ -5,7 +5,7 @@
 Pour utiliser les différents services développés, vous devez au préalable installer plusieurs composants sur votre machine hôte (testé avec Windows 10 64bit).
  
 - Installez SharpDevelop 3.2, ainsi que l'AddIn SharpWComp-3.2.
-- Installez Node.js.
+- Installez Node.js. Dans le dossier serveur/sources/nodejs, lancer la commande : "npm install".
 - Logiciel Device Spy.
 
 ## Ordre de lancement
@@ -27,7 +27,7 @@ node ./server.js
 
 #### Schéma de composition WComp
 
-// TODO: Déplacer les Beans de wcomp/bin au bon endroit
+- Déplacez toutes les DLL du dossier wcom/bin dans votre répertoire WComp (généralement Documents/WComp.NET/Beans).
 - Ouvrez SharpDevelop. 
 - Créez un nouveau fichier "C# Container" dans la catégorie "WComp.NET".
 - Dans le menu "WComp.NET", choisissez "Import (Replace)..." et sélectionnez le fichier "FlHubber.wcc" présent dans le dossier wcom/sources.
