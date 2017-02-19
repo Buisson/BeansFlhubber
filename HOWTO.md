@@ -16,7 +16,7 @@ Commencez par branchez l'objet connecté :
 - Branchez le câble ethernet ;
 - Branchez les deux prises d'alimentation : celle de la RaspberryPi et celle du hub.
 
-Au démarrage, la RaspberryPi va lancer le script Python et ainsi devenir l'objet connecté FlHubber.
+Au démarrage, la RaspberryPi va lancer le script Python (grace au fichier /etc/rc.local) et ainsi devenir l'objet connecté FlHubber.
 
 ### Services
 
